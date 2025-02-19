@@ -1,4 +1,5 @@
-# Interactive Audio-Visual Hand & Face Tracking
+# Instrumental Proximities
+# Gestural Augmentation of Subjective Intimacy
 
 An interactive art piece that creates visual connections between hands and face, generating ambient sounds based on movement. Built with p5.js, MediaPipe, and Tone.js.
 
