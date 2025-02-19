@@ -2,6 +2,8 @@
 
 An interactive art piece that creates visual connections between hands and face, generating ambient sounds based on movement. Built with p5.js, MediaPipe, and Tone.js.
 
+🎮 [Try the Live App](https://marlonbarrios.github.io/instrumentalproximities/)
+
 ## Overview
 
 This project creates a real-time interactive experience where:
@@ -59,6 +61,114 @@ This project creates a real-time interactive experience where:
 - Velocity controlled by movement speed
 - Uses pink noise for softer texture
 - Plays at regular intervals
+
+## Sound Generation Technical Details
+
+### Audio Engine Architecture
+
+#### Synthesis Chain
+1. **Main Signal Path**
+   - Synths → Delay → Reverb → Output
+   - Individual volume control per synth
+   - Parallel processing for multiple voices
+
+2. **Effects Configuration**
+   ```javascript
+   reverb = new Tone.Reverb({
+     decay: 4,
+     wet: 0.4
+   })
+   
+   delay = new Tone.FeedbackDelay({
+     delayTime: "8n",
+     feedback: 0.3,
+     wet: 0.2
+   })
+   ```
+
+### Synthesizer Specifications
+
+1. **Drone Synth (Background Texture)**
+   ```javascript
+   droneSynth = new Tone.PolySynth(Tone.Synth, {
+     oscillator: {
+       type: "sine4"  // 4 detuned sine waves
+     },
+     envelope: {
+       attack: 2,     // Slow fade in
+       decay: 1,
+       sustain: 1,    // Hold at full volume
+       release: 4     // Long release tail
+     }
+   })
+   ```
+   - Uses 4-voice polyphony for chord generation
+   - Chord structure: root, perfect 5th, octave, major 3rd
+   - Updates every 4 seconds based on hand position
+
+2. **Main Synth (Hand Movement)**
+   ```javascript
+   synth = new Tone.Synth({
+     oscillator: {
+       type: "triangle4"  // 4 detuned triangle waves
+     },
+     envelope: {
+       attack: 0.1,
+       decay: 0.3,
+       sustain: 0.4,
+       release: 1
+     }
+   })
+   ```
+   - Triggered by velocity threshold (>15)
+   - Note duration: "2n" (half note)
+   - Velocity scaling: 0.3 maximum
+
+3. **Bass Synth (Mouth Control)**
+   ```javascript
+   bassline = new Tone.MonoSynth({
+     oscillator: {
+       type: "triangle"
+     },
+     envelope: {
+       attack: 0.1,
+       decay: 0.3,
+       sustain: 0.6,
+       release: 0.8
+     },
+     filterEnvelope: {
+       baseFrequency: 100,
+       octaves: 3,
+       attack: 0.1,
+       decay: 0.2,
+       sustain: 0.4,
+       release: 0.8
+     }
+   })
+   ```
+   - Monophonic for clean bass lines
+   - Filter envelope for dynamic timbre
+   - Note duration: "1n" (whole note)
+
+4. **Hi-hat (Rhythmic Element)**
+   ```javascript
+   hihat = new Tone.NoiseSynth({
+     noise: {
+       type: "pink"  // Softer noise type
+     },
+     envelope: {
+       attack: 0.02,
+       decay: 0.2,
+       sustain: 0,
+       release: 0.2
+     }
+   })
+   ```
+   - Triggered every 16 frames
+   - Velocity range: 0.05 - 0.2
+   - Note duration: "16n" (sixteenth note)
+
+### Rate Limiting System
 
 ## Interaction Mappings
 
