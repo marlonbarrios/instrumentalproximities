@@ -49,12 +49,26 @@ This project creates a real-time interactive experience where:
 - Lower notes when hand is down
 - Uses triangle waves for clarity
 
-### Bass Synth (Mouth)
-- Triggered by mouth opening
-- Pitch based on mouth openness
-- Wider opening = lower notes
-- Uses filtered triangle waves
-- More resonant at lower frequencies
+### Mouth Interaction (Enhanced)
+- Opening triggers bright glowing points around mouth contour
+- Wider opening creates expanding ripple effects
+- Mouth corners emit particle streams when open
+- Intensity of glow directly maps to sound volume
+- Creates visual feedback for vocal cavity size
+
+### Bass Synth (Mouth-Driven)
+- Dramatic visual and sonic response to mouth opening
+- Real-time mapping of mouth shape to sound:
+  ```javascript
+  // Mouth shape to sound mapping
+  const mouthOpenness = lowerLipY - upperLipY;
+  const bassNote = map(mouthOpenness, 0.05, 0.2, 36, 48);
+  const intensity = map(mouthOpenness, 0.05, 0.2, 0.2, 1.0);
+  ```
+- Three levels of interaction:
+  1. Slight opening (0.05): Subtle bass tones, gentle glow
+  2. Medium opening (0.1): Stronger resonance, pulsing light
+  3. Wide opening (0.2): Deep bass, maximum visual intensity
 
 ### Hi-hat (Overall Movement)
 - Rhythmic element based on hand movement
@@ -221,4 +235,25 @@ This project creates a real-time interactive experience where:
 - Smooth movements create more musical results
 - Try combining hand movements with facial expressions
 - Explore the space between hands and face
-- Find sweet spots for different sound combinations 
+- Find sweet spots for different sound combinations
+
+### Visual Feedback for Mouth
+- Mouth outline highlighted with dynamic glow
+- Particle emission rate increases with opening
+- Connection lines become more energetic
+- Color intensity shifts with mouth movement
+- Creates visual "energy field" around mouth area
+
+### Mouth-Sound Integration
+- Bass frequency directly follows mouth shape
+- Opening speed affects attack time
+- Sustain length based on how long mouth stays open
+- Closing creates natural release fade
+- Cross-modulation with hand movements
+
+### Performance Tips for Mouth Control
+1. Start with small movements to learn sensitivity
+2. Combine with hand gestures for complex effects
+3. Use different mouth shapes for timbral variation
+4. Practice smooth opening/closing for fluid bass lines
+5. Explore extreme positions for dramatic effects 

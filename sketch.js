@@ -63,26 +63,22 @@ let droneSynth, droneChord;
 let lastDroneTime = 0;
 const droneInterval = 4; // seconds between drone changes
 
+// Add at the start with other variables
+let soundActive = false;
+
 
 /* - - Setup - - */
 function setup() {
-
   createCanvas(windowWidth, windowHeight);
   captureWebcam(); // launch webcam
 
-  // Add click handler for sound initialization
-  canvas.addEventListener('click', () => {
-    if (!soundInitialized) {
-      initSound();
-    }
-  });
-
+  // Remove click handler since we're using spacebar now
+  
   // styling
   noStroke();
   textAlign(CENTER, CENTER);
   textSize(20);
   fill('white');
-
 }
 
 
@@ -115,6 +111,69 @@ function draw() {
     const leftHand = mediaPipe.handLandmarks[0];
     const rightHand = mediaPipe.handLandmarks[1];
     
+    // Add mouth-to-hands effect FIRST, before other effects
+    // Get mouth openness
+    const upperLipY = faceLandmarks[13].y;
+    const lowerLipY = faceLandmarks[14].y;
+    const mouthOpenness = lowerLipY - upperLipY;
+    const isMouthOpen = mouthOpenness > 0.05;
+
+    // Draw lines from mouth when open
+    if (isMouthOpen) {
+      // Reduced number of mouth points for better performance
+      const mouthPoints = [61, 291, 37, 0, 267, 269];  // Reduced from 14 to 6 key points
+      
+      for (let mouthPoint of mouthPoints) {
+        if (!faceLandmarks[mouthPoint]) continue;
+        
+        let mouthX = map(faceLandmarks[mouthPoint].x, 1, 0, 0, capture.scaledWidth);
+        let mouthY = map(faceLandmarks[mouthPoint].y, 0, 1, 0, capture.scaledHeight);
+        
+        // Connect to both hands
+        for (let hand of [leftHand, rightHand]) {
+          if (!hand || !hand[0]) continue;
+          
+          let handX = map(hand[0].x, 1, 0, 0, capture.scaledWidth);
+          let handY = map(hand[0].y, 0, 1, 0, capture.scaledHeight);
+          
+          let d = dist(mouthX, mouthY, handX, handY);
+          let maxDist = 300;  // Reduced distance
+          
+          if (d < maxDist) {
+            let intensity = map(d, 0, maxDist, 1, 0);
+            intensity = pow(intensity * mouthOpenness * 10, 0.4);
+            
+            // Single layer of lines instead of multiple
+            stroke(255, 255, 255, 200 * intensity);
+            strokeWeight(0.8);
+            
+            // Simple line with basic wave
+            beginShape();
+            noFill();
+            for (let t = 0; t <= 1; t += 0.05) {  // Reduced detail
+              let x = lerp(mouthX, handX, t);
+              let y = lerp(mouthY, handY, t);
+              
+              // Simpler wave effect
+              let wave = sin(t * PI * 2 + frameCount * 0.1) * 2 * intensity;
+              vertex(x + wave, y + wave);
+            }
+            endShape();
+            
+            // Occasional particles
+            if (random() < 0.05 * intensity) {  // Reduced particle frequency
+              let t = random();
+              let x = lerp(mouthX, handX, t);
+              let y = lerp(mouthY, handY, t);
+              noStroke();
+              fill(255, 255, 255, 150 * intensity);
+              circle(x + random(-1, 1), y + random(-1, 1), 0.8);
+            }
+          }
+        }
+      }
+    }
+
     // Create a subtle network between facial points
     const networkPoints = [
       // Key facial points for minimal network
@@ -389,7 +448,7 @@ function draw() {
     blendMode(BLEND);
     
     // Sound generation based on movement
-    if (soundInitialized) {
+    if (soundInitialized && soundActive) {
       const currentTime = Tone.now();
       
       // Track hand movements
@@ -462,18 +521,13 @@ function draw() {
         }
       }
       
-      // Get mouth openness
-      const upperLipY = faceLandmarks[13].y;
-      const lowerLipY = faceLandmarks[14].y;
-      const mouthOpenness = lowerLipY - upperLipY;
-      const isMouthOpen = mouthOpenness > 0.05;
-      
       // Make bass notes longer
       if (isMouthOpen && 
           currentTime - lastTriggerTimes.bass >= minTriggerIntervals.bass) {
         try {
           let bassNote = Math.floor(map(mouthOpenness, 0.05, 0.2, 36, 48));
-          bassline.triggerAttackRelease(Tone.Frequency(bassNote, "midi"), "1n", undefined, 0.4);
+          // Increased velocity from 0.4 to 0.7 for louder sound
+          bassline.triggerAttackRelease(Tone.Frequency(bassNote, "midi"), "1n", undefined, 0.7);
           lastTriggerTimes.bass = currentTime;
         } catch (error) {
           console.error("Bass trigger error:", error);
@@ -643,6 +697,28 @@ function initSound() {
     console.log("Sound initialized!");
   } catch (error) {
     console.error("Error initializing sound:", error);
+  }
+}
+
+// Add this function to handle keyboard input
+function keyPressed() {
+  if (key === ' ') {  // Space bar
+    if (!soundInitialized) {
+      initSound();
+    }
+    soundActive = !soundActive;  // Toggle sound state
+    
+    if (!soundActive) {
+      // Stop all sounds when toggling off
+      try {
+        if (droneSynth) droneSynth.releaseAll();
+        if (synth) synth.releaseAll();
+        if (bassline) bassline.releaseAll();
+        if (hihat) hihat.releaseAll();
+      } catch (error) {
+        console.error("Error stopping sounds:", error);
+      }
+    }
   }
 }
 
