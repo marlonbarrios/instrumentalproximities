@@ -1,4 +1,5 @@
-# Interactive Audio-Visual Hand & Face Tracking
+# Instrumental Proximities
+# Gestural Augmentation of Subjective Intimacy
 
 An interactive art piece that creates visual connections between hands and face, generating ambient sounds based on movement. Built with p5.js, MediaPipe, and Tone.js.
 
@@ -235,25 +236,4 @@ This project creates a real-time interactive experience where:
 - Smooth movements create more musical results
 - Try combining hand movements with facial expressions
 - Explore the space between hands and face
-- Find sweet spots for different sound combinations
-
-### Visual Feedback for Mouth
-- Mouth outline highlighted with dynamic glow
-- Particle emission rate increases with opening
-- Connection lines become more energetic
-- Color intensity shifts with mouth movement
-- Creates visual "energy field" around mouth area
-
-### Mouth-Sound Integration
-- Bass frequency directly follows mouth shape
-- Opening speed affects attack time
-- Sustain length based on how long mouth stays open
-- Closing creates natural release fade
-- Cross-modulation with hand movements
-
-### Performance Tips for Mouth Control
-1. Start with small movements to learn sensitivity
-2. Combine with hand gestures for complex effects
-3. Use different mouth shapes for timbral variation
-4. Practice smooth opening/closing for fluid bass lines
-5. Explore extreme positions for dramatic effects 
+- Find sweet spots for different sound combinations 
