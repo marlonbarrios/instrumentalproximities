@@ -65,6 +65,8 @@ const droneInterval = 4; // seconds between drone changes
 
 // Add at the start with other variables
 let soundActive = false;
+let mouthOpenDuration = 0;
+let maxComplexity = 0;
 
 
 /* - - Setup - - */
@@ -118,10 +120,16 @@ function draw() {
     const mouthOpenness = lowerLipY - upperLipY;
     const isMouthOpen = mouthOpenness > 0.05;
 
-    // Draw lines from mouth when open
-    if (isMouthOpen) {
-      // Reduced number of mouth points for better performance
-      const mouthPoints = [61, 291, 37, 0, 267, 269];  // Reduced from 14 to 6 key points
+    // Increase complexity over time
+    mouthOpenDuration = min(mouthOpenDuration + 0.05, 1);
+    maxComplexity = map(mouthOpenDuration, 0, 1, 1, 6);
+
+    if (mouthOpenDuration > 0) {
+      // More mouth points as complexity increases
+      const mouthPoints = [61, 291, 37, 0, 267, 269];
+      if (maxComplexity > 3) {
+        mouthPoints.push(84, 314, 185, 40, 409);
+      }
       
       for (let mouthPoint of mouthPoints) {
         if (!faceLandmarks[mouthPoint]) continue;
@@ -137,37 +145,48 @@ function draw() {
           let handY = map(hand[0].y, 0, 1, 0, capture.scaledHeight);
           
           let d = dist(mouthX, mouthY, handX, handY);
-          let maxDist = 300;  // Reduced distance
+          let maxDist = 300 + (100 * mouthOpenDuration);  // Distance increases with duration
           
           if (d < maxDist) {
             let intensity = map(d, 0, maxDist, 1, 0);
-            intensity = pow(intensity * mouthOpenness * 10, 0.4);
+            intensity = pow(intensity * mouthOpenness * (10 + (10 * mouthOpenDuration)), 0.4);
             
-            // Single layer of lines instead of multiple
-            stroke(255, 255, 255, 200 * intensity);
-            strokeWeight(0.8);
-            
-            // Simple line with basic wave
-            beginShape();
-            noFill();
-            for (let t = 0; t <= 1; t += 0.05) {  // Reduced detail
-              let x = lerp(mouthX, handX, t);
-              let y = lerp(mouthY, handY, t);
+            // Number of layers increases with complexity
+            let numLayers = floor(map(maxComplexity, 1, 6, 1, 3));
+            for (let k = 0; k < numLayers; k++) {
+              let alpha = map(k, 0, numLayers, 255 * intensity, 0);
+              stroke(255, 255, 255, alpha);
+              strokeWeight(0.8 + (0.2 * mouthOpenDuration));
               
-              // Simpler wave effect
-              let wave = sin(t * PI * 2 + frameCount * 0.1) * 2 * intensity;
-              vertex(x + wave, y + wave);
+              // Wave complexity increases with duration
+              let numWaves = floor(map(maxComplexity, 1, 6, 1, 3));
+              beginShape();
+              noFill();
+              for (let t = 0; t <= 1; t += 0.05) {
+                let x = lerp(mouthX, handX, t);
+                let y = lerp(mouthY, handY, t);
+                
+                let totalWave = 0;
+                for (let w = 1; w <= numWaves; w++) {
+                  let time = frameCount * 0.1;
+                  totalWave += sin(t * PI * (2 * w) + time) * (2 + w) * intensity;
+                }
+                
+                vertex(x + totalWave, y + totalWave);
+              }
+              endShape();
             }
-            endShape();
             
-            // Occasional particles
-            if (random() < 0.05 * intensity) {  // Reduced particle frequency
+            // Particles increase with complexity
+            let particleChance = map(maxComplexity, 1, 6, 0.02, 0.08);
+            if (random() < particleChance * intensity) {
               let t = random();
               let x = lerp(mouthX, handX, t);
               let y = lerp(mouthY, handY, t);
               noStroke();
               fill(255, 255, 255, 150 * intensity);
-              circle(x + random(-1, 1), y + random(-1, 1), 0.8);
+              let size = random(0.8, 0.8 + mouthOpenDuration);
+              circle(x + random(-1, 1), y + random(-1, 1), size);
             }
           }
         }
