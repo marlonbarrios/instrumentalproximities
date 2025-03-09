@@ -5,6 +5,8 @@ An interactive art piece that creates visual connections between hands and face,
 
 🎮 [Try the Live App](https://marlonbarrios.github.io/instrumentalproximities/)
 
+<img width="1493" alt="Screenshot 2025-03-09 at 1 14 52 PM" src="https://github.com/user-attachments/assets/a02dd1bb-1861-46c1-b6e9-77613f800bd4" />
+
 🎥 [Watch the Video](https://youtu.be/1-0gC-jJMHA)
 
 ## Overview
@@ -16,6 +18,8 @@ This project creates a real-time interactive experience where:
 - Everything responds fluidly to user interaction
 
 ## Visual Elements
+
+<img width="898" alt="Screenshot 2025-03-09 at 1 40 45 PM" src="https://github.com/user-attachments/assets/bda3d171-bca3-4daa-a5a6-bbc6ff09a77d" />
 
 ### Face Network
 - Subtle connections between key facial points
