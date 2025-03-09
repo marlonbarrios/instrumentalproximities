@@ -5,7 +5,7 @@ An interactive art piece that creates visual connections between hands and face,
 
 🎮 [Try the Live App](https://marlonbarrios.github.io/instrumentalproximities/)
 
-🎥 [Watch the Video](https://github.com/user-attachments/assets/039aa4a0-14c9-4335-b803-e7fe2a44b4c7)
+🎥 [Watch the Video](https://youtu.be/1-0gC-jJMHA)
 
 ## Overview
 
