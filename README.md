@@ -4,8 +4,10 @@
 An interactive art piece that creates visual connections between hands and face, generating ambient sounds based on movement. Built with p5.js, MediaPipe, and Tone.js.
 
 🎮 [Try the Live App](https://marlonbarrios.github.io/instrumentalproximities/)
-
-![Instrumental Proximities](https://github.com/user-attachments/assets/039aa4a0-14c9-4335-b803-e7fe2a44b4c7)
+<video width="640" height="360" controls>
+  <source src="https://your-video-link.com/video.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
 
 ## Overview
 
