@@ -1,9 +1,11 @@
 # Instrumental Proximities
-# Gestural Augmentation of Subjective Intimacy
+## Gestural Augmentation of Subjective Intimacy
 
 An interactive art piece that creates visual connections between hands and face, generating ambient sounds based on movement. Built with p5.js, MediaPipe, and Tone.js.
 
 🎮 [Try the Live App](https://marlonbarrios.github.io/instrumentalproximities/)
+
+![Instrumental Proximities](https://github.com/user-attachments/assets/039aa4a0-14c9-4335-b803-e7fe2a44b4c7)
 
 ## Overview
 
@@ -165,75 +167,15 @@ This project creates a real-time interactive experience where:
    - Filter envelope for dynamic timbre
    - Note duration: "1n" (whole note)
 
-4. **Hi-hat (Rhythmic Element)**
-   ```javascript
-   hihat = new Tone.NoiseSynth({
-     noise: {
-       type: "pink"  // Softer noise type
-     },
-     envelope: {
-       attack: 0.02,
-       decay: 0.2,
-       sustain: 0,
-       release: 0.2
-     }
-   })
-   ```
-   - Triggered every 16 frames
-   - Velocity range: 0.05 - 0.2
-   - Note duration: "16n" (sixteenth note)
+## Performance & License
 
-### Rate Limiting System
+**Instrumental Proximities** is used in the lecture performance **Duets in Latent Space**.
 
-## Interaction Mappings
+### MIT License
+**Copyright (c) 2024 Marlon Barrios Solano**
 
-### Left Hand
-- Vertical position → Synth pitch (48-72 MIDI)
-- Movement speed → Sound triggering
-- Position → Drone root note
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software, to use, copy, modify, and distribute the software under the following conditions:
 
-### Right Hand
-- Movement speed → Sound intensity
-- Position → Visual connection density
-
-### Mouth
-- Opening width → Bass note (36-48 MIDI)
-- Opening threshold → Bass triggering
-
-### Overall Movement
-- Hand velocity → Hi-hat velocity
-- Movement amount → Reverb wet mix
-- Distance between points → Visual intensity
-
-## Technical Details
-
-### Dependencies
-- p5.js for graphics
-- MediaPipe for tracking
-- Tone.js for audio synthesis
-
-### Sound Design
-- Reverb with 4s decay
-- Delay feedback for ambience
-- Rate limiting for stability
-- Error handling for audio triggers
-
-### Visual Design
-- Additive blending for glow
-- Alpha-based layering
-- Dynamic intensity scaling
-- Particle systems for detail
-
-## Getting Started
-
-1. Click anywhere to initialize audio
-2. Allow webcam access
-3. Move hands and face to interact
-4. Experiment with different movements and gestures
-
-## Performance Notes
-
-- Smooth movements create more musical results
-- Try combining hand movements with facial expressions
-- Explore the space between hands and face
-- Find sweet spots for different sound combinations 
+- **Attribution Required**: If used in a performance, installation, or public presentation, credit must be given to **Marlon Barrios Solano** for concept and programming.
+- **License Inclusion**: This license must be included in all copies or substantial portions of the software.
+- **No Warranty**: The software is provided "as is" without warranty of any kind.
